@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=750" />
+<title>{{ group_name }} 精简 | 极简版</title>
+<style>
+  :root {
+    --bg: #ece8e2;
+    --card: #ffffff;
+    --ink: #2c2c2c;
+    --muted: #8d8d8d;
+    --sub: #6b6b6b;
+    --line: #efece7;
+    --accent: #e37a3a;
+    --accent-soft: #fff3ea;
+    --bar: #f3d3b8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    width: 750px;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page { width: 750px; padding: 22px 18px 28px; }
+  .card {
+    background: var(--card);
+    border-radius: 16px;
+    padding: 18px 18px 16px;
+    margin-bottom: 12px;
+  }
+  .head .title {
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: .02em;
+    line-height: 1.35;
+  }
+  .head .title.long { font-size: 22px; }
+  .head .title em {
+    font-style: normal;
+    color: var(--accent);
+    font-weight: 800;
+  }
+  .head .date { margin-top: 8px; color: var(--muted); font-size: 13px; }
+  .head .lead { margin-top: 10px; color: var(--sub); font-size: 13px; line-height: 1.7; }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--line);
+  }
+  .stat { text-align: center; }
+  .stat .n {
+    font-size: 28px;
+    font-weight: 800;
+    color: var(--accent);
+    font-variant-numeric: tabular-nums;
+    line-height: 1.1;
+  }
+  .stat .l { margin-top: 4px; font-size: 11px; color: var(--muted); }
+  .sec-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 800;
+    margin: 4px 2px 10px;
+  }
+  .sec-title .dot {
+    width: 8px; height: 8px;
+    background: var(--accent);
+    border-radius: 2px;
+  }
+  .topic { padding: 16px 16px 14px; }
+  .topic h3 { font-size: 16px; font-weight: 800; line-height: 1.4; }
+  .meta { margin-top: 6px; font-size: 12px; color: var(--muted); }
+  .narr { margin-top: 10px; font-size: 13.5px; line-height: 1.75; color: #3a3a3a; }
+  .people {
+    display: flex; flex-wrap: wrap; gap: 10px 12px;
+    margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line);
+  }
+  .person { display: flex; flex-direction: column; align-items: center; width: 56px; }
+  .person img, .fallback {
+    width: 34px; height: 34px; border-radius: 50%; object-fit: cover; background: #e37a3a;
+  }
+  .fallback {
+    display: flex; align-items: center; justify-content: center;
+    color: #fff; font-size: 12px; font-weight: 700;
+  }
+  .person span {
+    margin-top: 4px; font-size: 10px; color: var(--sub);
+    max-width: 56px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-align: center;
+  }
+  .res li, .news li {
+    list-style: none; font-size: 13.5px; line-height: 1.7; color: #3a3a3a;
+    padding: 7px 0; border-bottom: 1px solid var(--line);
+  }
+  .res li:last-child, .news li:last-child { border-bottom: 0; padding-bottom: 0; }
+  .res li:first-child, .news li:first-child { padding-top: 0; }
+  .res b { font-weight: 700; }
+  .res .who { color: var(--muted); font-weight: 400; }
+  .quote {
+    border-radius: 12px; padding: 14px 14px 12px 16px; margin-bottom: 10px;
+    background: #faf8f5; border-left: 4px solid var(--accent);
+  }
+  .quote.q2 { border-left-color: #5aa0d6; background: #f5f9fc; }
+  .quote.q3 { border-left-color: #6aa56a; background: #f5faf5; }
+  .quote.q4 { border-left-color: #c9a227; background: #fbf8ee; }
+  .quote.q5 { border-left-color: #8b6cc9; background: #f7f4fb; }
+  .quote.q6 { border-left-color: #d46a6a; background: #fdf6f5; }
+  .quote .txt { font-size: 15px; line-height: 1.6; font-weight: 600; }
+  .quote .by { margin-top: 8px; font-size: 12px; color: var(--muted); }
+  .qa { margin-bottom: 12px; }
+  .qa:last-child { margin-bottom: 0; }
+  .qa .q, .qa .a { font-size: 13.5px; line-height: 1.7; }
+  .qa .q { font-weight: 700; }
+  .qa .a { margin-top: 4px; color: #444; }
+  .qa .tag {
+    display: inline-block; font-size: 11px; font-weight: 800; color: var(--accent); margin-right: 4px;
+  }
+  .empty { font-size: 13.5px; color: var(--muted); }
+  .rank { display: flex; flex-direction: column; gap: 10px; }
+  .rank-row {
+    display: grid; grid-template-columns: 22px 108px 1fr 36px; gap: 8px;
+    align-items: center; font-size: 13px;
+  }
+  .rank-row .no { color: var(--muted); font-variant-numeric: tabular-nums; }
+  .rank-row .nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .bar { height: 8px; background: var(--bar); border-radius: 99px; overflow: hidden; }
+  .bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; }
+  .rank-row .cnt { text-align: right; font-weight: 700; font-variant-numeric: tabular-nums; color: var(--accent); }
+  .kv { margin-top: 14px; font-size: 13px; line-height: 1.8; color: #444; }
+  .kv b { color: var(--ink); }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chip {
+    display: flex; align-items: center; gap: 6px; background: #f7f4f0;
+    border-radius: 8px; padding: 5px 8px 5px 5px; font-size: 13px;
+  }
+  .chip .c {
+    min-width: 22px; height: 22px; padding: 0 5px; border-radius: 6px;
+    background: var(--accent); color: #fff; font-size: 12px; font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .clusters { margin-top: 12px; font-size: 13px; color: var(--sub); }
+  .clusters span {
+    display: inline-block; margin-right: 8px; padding: 3px 8px;
+    background: var(--accent-soft); color: var(--accent); border-radius: 6px; font-weight: 700;
+  }
+  .foot { text-align: center; color: var(--muted); font-size: 11px; line-height: 1.8; padding: 8px 8px 4px; }
+</style>
+</head>
+<body>
+<div class="page">
+  <section class="card head">
+    <div class="title{% if group_name|length > 16 %} long{% endif %}">{{ group_name }} <em>精简 | 极简版</em></div>
+    <div class="date">{{ date_range }}</div>
+    <div class="lead">{{ lead }}</div>
+    <div class="stats">
+      <div class="stat"><div class="n">{{ stats.messages }}</div><div class="l">消息条数</div></div>
+      <div class="stat"><div class="n">{{ stats.speakers }}</div><div class="l">发言人数</div></div>
+      <div class="stat"><div class="n">{{ stats.hours }}</div><div class="l">覆盖小时</div></div>
+      <div class="stat"><div class="n">{{ stats.avg }}</div><div class="l">人均条数</div></div>
+    </div>
+  </section>
+
+  <div class="sec-title"><i class="dot"></i>今日讨论点</div>
+  {% for t in topics %}
+  <section class="card topic">
+    <h3>{{ t.title }}</h3>
+    <div class="meta">{{ t.meta }}</div>
+    <div class="narr">{{ t.narr }}</div>
+    {% if t.people %}
+    <div class="people">
+      {% for p in t.people %}
+      <div class="person">
+        {% if p.avatar %}
+        <img src="{{ p.avatar }}" alt="">
+        {% else %}
+        <div class="fallback">{{ (p.label or p.name)[:1] }}</div>
+        {% endif %}
+        <span>{{ p.label or p.name }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  {% endfor %}
+
+  <div class="sec-title"><i class="dot"></i>可用信息与资源</div>
+  <section class="card">
+    {% if resources %}
+    <ul class="res">
+      {% for r in resources %}
+      <li><b>{{ r.title }}</b> <span class="who">— {{ r.who }}</span> — {{ r.detail }}</li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty">今日无</div>
+    {% endif %}
+  </section>
+
+  <div class="sec-title"><i class="dot"></i>重要消息汇总</div>
+  <section class="card">
+    {% if news %}
+    <ul class="news">
+      {% for n in news %}<li>{{ n }}</li>{% endfor %}
+    </ul>
+    {% else %}
+    <div class="empty">今日无</div>
+    {% endif %}
+  </section>
+
+  <div class="sec-title"><i class="dot"></i>有趣对话 / 金句</div>
+  <section class="card" style="padding-bottom:8px">
+    {% if quotes %}
+      {% for q in quotes %}
+      <div class="quote q{{ loop.index }}">
+        <div class="txt">{{ q.text }}</div>
+        <div class="by">{{ q.by }}</div>
+      </div>
+      {% endfor %}
+    {% else %}
+    <div class="empty">今日无</div>
+    {% endif %}
+  </section>
+
+  <div class="sec-title"><i class="dot"></i>问题与解答</div>
+  <section class="card">
+    {% if qa %}
+      {% for item in qa %}
+      <div class="qa">
+        <div class="q"><span class="tag">Q</span>{{ item.q }}</div>
+        <div class="a"><span class="tag">A</span>{{ item.a }}</div>
+      </div>
+      {% endfor %}
+    {% else %}
+    <div class="empty">今日无</div>
+    {% endif %}
+  </section>
+
+  <div class="sec-title"><i class="dot"></i>群内数据</div>
+  <section class="card">
+    <div class="rank">
+      {% set top = rank[0].count if rank else 1 %}
+      {% for r in rank %}
+      <div class="rank-row">
+        <span class="no">{{ loop.index }}</span>
+        <span class="nm">{{ r.name }}</span>
+        <div class="bar"><i style="width:{{ (r.count / top * 100)|round|int }}%"></i></div>
+        <span class="cnt">{{ r.count }}</span>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="kv">
+      <div><b>高峰：</b>{{ peak }}</div>
+      <div><b>低谷：</b>{{ valley }}</div>
+    </div>
+  </section>
+
+  <div class="sec-title"><i class="dot"></i>词云 / 关键词</div>
+  <section class="card">
+    <div class="chips">
+      {% for k in keywords %}
+      <div class="chip"><span class="c">{{ k.count }}</span>{{ k.word }}</div>
+      {% endfor %}
+    </div>
+    {% if clusters %}
+    <div class="clusters">{% for c in clusters %}<span>{{ c }}</span>{% endfor %}</div>
+    {% endif %}
+  </section>
+
+  <div class="foot">
+    数据来源：本段聊天记录（{{ footer_span }}，共 {{ footer_n }} 条）<br/>
+    生成说明：仅整理记录内信息；条数无法精确时已标「约」
+  </div>
+</div>
+</body>
+</html>

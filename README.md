@@ -13,6 +13,8 @@ Grok / Agent Skill：把 WeFlow 导出的微信群 jsonl 整理成「精简 | �
 
 ## 用法
 
-把 WeFlow 导出目录或 `.jsonl` 丢给 Agent，说「做成精简版日报 png」或运行 `/qun-ribao-jijian`。
+说「帮我做某某群 9/27–9/28 的日报」或运行 `/qun-ribao-jijian`。Agent 会先调本机 WeFlow API 导出 jsonl，再出 PNG。
 
-工作流见 `SKILL.md`，编辑规则见 `references/editorial.md`。
+也可以直接丢现成的 WeFlow 导出目录。WeFlow 需在运行，并开启设置里的 API 服务（`127.0.0.1:5031`）。
+
+工作流见 `SKILL.md`，编辑规则见 `references/editorial.md`，导出见 `references/weflow.md`。
